@@ -3,7 +3,7 @@ module github.com/donnigundala/dg-observability
 go 1.25.0
 
 require (
-	github.com/donnigundala/dg-core v1.8.1
+	github.com/donnigundala/dg-core v1.9.0
 	go.opentelemetry.io/otel v1.39.0
 	go.opentelemetry.io/otel/exporters/prometheus v0.61.0
 	go.opentelemetry.io/otel/sdk v1.39.0
