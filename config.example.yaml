@@ -1,0 +1,4 @@
+observability:
+  enabled: true
+  service_name: "dg-framework"
+  exporter: "prometheus"
