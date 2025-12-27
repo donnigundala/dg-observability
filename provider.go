@@ -78,7 +78,32 @@ func (p *ObservabilityServiceProvider) Boot(app foundation.Application) error {
 	otel.SetMeterProvider(provider)
 	p.meterProvider = provider
 
+	// 5. Auto-discover and instrument active plugins
+	p.instrumentActivePlugins(app)
+
 	return nil
+}
+
+// instrumentActivePlugins discovers registered plugins that implement foundation.Observable
+// and triggers their metrics registration.
+func (p *ObservabilityServiceProvider) instrumentActivePlugins(app foundation.Application) {
+	// Well-known bindings that we know might be observable
+	bindings := []string{"database", "cache", "queue", "filesystem"}
+
+	for _, binding := range bindings {
+		if !app.Bound(binding) {
+			continue
+		}
+
+		instance, err := app.Make(binding)
+		if err != nil {
+			continue
+		}
+
+		if observable, ok := instance.(foundation.Observable); ok {
+			_ = observable.RegisterMetrics()
+		}
+	}
 }
 
 // Shutdown gracefully shuts down the observability services.
